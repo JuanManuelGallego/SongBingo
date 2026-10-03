@@ -2,11 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 
-export type Song = {
-  id: string;
-  title: string;
-  artist: string;
-};
+import type { Song } from "./songs";
 
 type SavedGame = {
   version: 1;
@@ -168,20 +164,21 @@ export default function BingoCard({
     <main className="game-shell">
       <header className="game-header">
         <div>
-          <p className="eyebrow">Sube el volumen. Marca el ritmo.</p>
           <h1>
             Bingo <span>Musical</span>
           </h1>
         </div>
-        <div className="rule-pill">
-          {fullBoardOnly ? "Completa el tablero" : "Una línea gana"}
+        <div className="header-actions">
+          <div className="rule-pill">
+            {fullBoardOnly ? "Completa el tablero" : "Una línea gana"}
+          </div>
         </div>
       </header>
 
       <section className="game-card" aria-label="Tu tarjeta de Bingo Musical">
         <div className="card-toolbar">
           <p>
-            ¿La escuchaste? Márcala. Completa{" "}
+            Completa{" "}
             {fullBoardOnly ? "todo el tablero" : "cinco en línea"}.
           </p>
           <button className="regenerate-button" onClick={regenerate} type="button">
@@ -227,10 +224,6 @@ export default function BingoCard({
         )}
       </section>
 
-      <footer>
-        <span aria-hidden="true">♫</span> Cada tarjeta es única
-      </footer>
-
       {showWin && (
         <div
           className="win-overlay"
@@ -243,7 +236,6 @@ export default function BingoCard({
         >
           <div className="win-dialog">
             <div className="win-burst" aria-hidden="true">★</div>
-            <p>¡Sube la música!</p>
             <h2 id="win-title">¡BINGO!</h2>
             <p>Encontraste el ritmo ganador.</p>
             <button autoFocus onClick={() => setShowWin(false)} type="button">
