@@ -1,4 +1,5 @@
 import BingoCard from "./bingo-card";
+import { getBingoMode } from "./bingo-rules";
 import { loadSongs, type Song } from "./songs";
 
 export default function Home() {
@@ -12,13 +13,10 @@ export default function Home() {
       "No pudimos cargar las canciones. Pídele al anfitrión que lo intente de nuevo.";
   }
 
-  const fullBoardOnly =
-    process.env.BINGO_FULL_BOARD_ONLY?.trim().toLowerCase() === "true";
-
   return (
     <BingoCard
       songs={songs}
-      fullBoardOnly={fullBoardOnly}
+      mode={getBingoMode(process.env.BINGO_MODE)}
       error={error}
     />
   );

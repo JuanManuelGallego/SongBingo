@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 
+import { BINGO_MODES, hasBingo, type BingoMode } from "./bingo-rules";
 import type { Song } from "./songs";
 
 type SavedGame = {
@@ -12,7 +13,7 @@ type SavedGame = {
 
 type BingoCardProps = {
   songs: Song[];
-  fullBoardOnly: boolean;
+  mode: BingoMode;
   error?: string;
 };
 
@@ -32,34 +33,9 @@ function makeBoard(songs: Song[]) {
   return shuffled.slice(0, 24);
 }
 
-function hasBingo(board: Song[], marked: Set<string>, fullBoardOnly: boolean) {
-  if (board.length !== 24) return false;
-
-  const cells = Array.from({ length: 25 }, (_, index) => {
-    if (index === 12) return true;
-    const song = board[index < 12 ? index : index - 1];
-    return marked.has(song.id);
-  });
-
-  if (fullBoardOnly) return cells.every(Boolean);
-
-  const lines = [
-    ...Array.from({ length: 5 }, (_, row) =>
-      Array.from({ length: 5 }, (_, column) => row * 5 + column),
-    ),
-    ...Array.from({ length: 5 }, (_, column) =>
-      Array.from({ length: 5 }, (_, row) => row * 5 + column),
-    ),
-    [0, 6, 12, 18, 24],
-    [4, 8, 12, 16, 20],
-  ];
-
-  return lines.some((line) => line.every((index) => cells[index]));
-}
-
 export default function BingoCard({
   songs,
-  fullBoardOnly,
+  mode,
   error,
 }: BingoCardProps) {
   const [board, setBoard] = useState<Song[] | null>(null);
@@ -114,8 +90,8 @@ export default function BingoCard({
   }, [board, marked]);
 
   const winner = useMemo(
-    () => (board ? hasBingo(board, marked, fullBoardOnly) : false),
-    [board, fullBoardOnly, marked],
+    () => (board ? hasBingo(board, marked, mode) : false),
+    [board, marked, mode],
   );
 
   useEffect(() => {
@@ -169,23 +145,11 @@ export default function BingoCard({
           </h1>
         </div>
         <div className="header-actions">
-          <div className="rule-pill">
-            {fullBoardOnly ? "Completa el tablero" : "Una línea gana"}
-          </div>
+          <div className="rule-pill">{BINGO_MODES[mode].label}</div>
         </div>
       </header>
 
       <section className="game-card" aria-label="Tu tarjeta de Bingo Musical">
-        <div className="card-toolbar">
-          <p>
-            Completa{" "}
-            {fullBoardOnly ? "todo el tablero" : "cinco en línea"}.
-          </p>
-          <button className="regenerate-button" onClick={regenerate} type="button">
-            <span aria-hidden="true">↻</span> Nueva tarjeta
-          </button>
-        </div>
-
         {board ? (
           <div className="bingo-grid">
             {Array.from({ length: 25 }, (_, index) => {
@@ -223,6 +187,9 @@ export default function BingoCard({
           </div>
         )}
       </section>
+          <button className="regenerate-button" onClick={regenerate} type="button">
+            <span aria-hidden="true">↻</span> Nueva tarjeta
+          </button>
 
       {showWin && (
         <div

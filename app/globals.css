@@ -126,7 +126,8 @@ h1 span {
 }
 
 .regenerate-button {
-  flex: 0 0 auto;
+  display: block;
+  width: fit-content;
   min-height: 42px;
   padding: 0 12px;
   border: 2px solid var(--ink);
@@ -137,6 +138,7 @@ h1 span {
   font-size: 0.78rem;
   font-weight: 900;
   cursor: pointer;
+  margin: 16px auto 0;
 }
 
 .regenerate-button:active {
