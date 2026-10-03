@@ -204,7 +204,6 @@ export default function BingoCard({
           <div className="win-dialog">
             <div className="win-burst" aria-hidden="true">★</div>
             <h2 id="win-title">¡BINGO!</h2>
-            <p>Encontraste el ritmo ganador.</p>
             <button autoFocus onClick={() => setShowWin(false)} type="button">
               Volver a mi tarjeta
             </button>
